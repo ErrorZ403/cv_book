@@ -6,23 +6,21 @@ from srccam.calib import Calib
 from srccam.camera import Camera
 from srccam.point import Point3d as Point
 
-
 BLACK = (0, 0, 0)
 BLUE = (255, 0, 0)
 GREEN = (0, 255, 0)
 RED = (0, 0, 255)
 LINE_WIDTH = 5
 
-
 class WayEstimator:
     """Класс для построения процекции пути движения ТС."""
     def __init__(self, calib_dict: dict, ways_length: int):
         self.calib = Calib(calib_dict)
         self.camera = Camera(self.calib)
-        self.left_3d_near = Point((-0.8, 0, 0))
-        self.left_3d_far = Point((-0.8, ways_length, 0))
-        self.right_3d_near = Point((0.8, 0, 0))
-        self.right_3d_far = Point((0.8, ways_length, 0))
+        self.left_3d_near = Point((-0.76, 5.0, 0))
+        self.left_3d_far = Point((-0.76, ways_length, 0))
+        self.right_3d_near = Point((0.76, 5.0, 0))
+        self.right_3d_far = Point((0.76, ways_length, 0))
 
     def draw_way(self, img: np.array):
         left_2d_near = self.camera.project_point_3d_to_2d(self.left_3d_near)
@@ -40,7 +38,7 @@ class Reader(SeasonReader):
         par = ['K', 'D', 'r', 't']
         calib_reader = CalibReader()
         calib_reader.initialize(
-            file_name='../data/tram/leftImage.yml',
+            file_name='../data/city/leftImage.yml',
             param=par)
         calib_dict = calib_reader.read()
         self.way_estimator = WayEstimator(calib_dict, 10)
@@ -67,7 +65,7 @@ class Reader(SeasonReader):
 
 if __name__ == '__main__':
     init_args = {
-        'path_to_data_root': '../data/tram/'
+        'path_to_data_root': '../data/city/'
     }
     s = Reader()
     s.initialize(**init_args)
